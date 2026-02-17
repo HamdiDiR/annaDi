@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Anna Diana 🙂</title>
+
+<style>
+  body {
+    background: linear-gradient(135deg, #ffdde1, #ee9ca7);
+    font-family: Arial, sans-serif;
+    margin: 0;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .card {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    width: 320px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    position: relative;
+    margin: 60px auto;
+  }
+
+  button {
+    margin: 10px;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 20px;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+
+  button:hover {
+    transform: scale(1.05);
+  }
+
+  #yesBtn { background: #999; }
+  #noBoyfriendBtn { background: #4caf50; }
+  #alsoBtn { background: #ee9ca7; }
+  #noBtn { background: red; }
+
+  /* Fade system */
+  .fade {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.6s ease;
+  }
+
+  .fade.show {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  #secret {
+    margin-top: 15px;
+    font-weight: bold;
+  }
+</style>
+</head>
+
+<body>
+
+<div class="card">
+  <h1>Anna Diana !! 🙂</h1>
+
+  <!-- First question -->
+  <p id="question" class="fade show">Sei Fidanzata?</p>
+
+  <div id="answerButtons" class="fade show">
+    <button id="yesBtn">Si</button>
+    <button id="noBoyfriendBtn">No</button>
+  </div>
+
+  <!-- Hidden content -->
+  <div id="mainContent" class="fade">
+    <p>  It's a secret but if you click "Also me" you will know it , Don't try to Click "NO"</p>
+
+    <button id="alsoBtn">Also me</button>
+    <button id="noBtn">No</button>
+
+    <p id="secret" class="fade"> 
+        i kinda Like you and i wanna know you better 
+    
+    </p>
+  </div>
+</div>
+
+<script>
+  // Elements
+  const yesBtn = document.getElementById("yesBtn");
+  const noBoyfriendBtn = document.getElementById("noBoyfriendBtn");
+  const mainContent = document.getElementById("mainContent");
+  const answerButtons = document.getElementById("answerButtons");
+  const question = document.getElementById("question");
+  const secret = document.getElementById("secret");
+  const alsoBtn = document.getElementById("alsoBtn");
+  const noBtn = document.getElementById("noBtn");
+
+  // NO boyfriend → fade transition
+  noBoyfriendBtn.addEventListener("click", () => {
+    question.classList.remove("show");
+    answerButtons.classList.remove("show");
+
+    setTimeout(() => {
+      mainContent.classList.add("show");
+    }, 500);
+  });
+
+  // YES → nothing happens
+  yesBtn.addEventListener("click", () => {});
+
+  // Reveal secret with fade
+  alsoBtn.addEventListener("click", () => {
+    secret.classList.add("show");
+  });
+
+  // Uncatchable No button with fade teleport
+  function teleportButton(mouseX, mouseY) {
+    const rect = noBtn.getBoundingClientRect();
+    const padding = 10;
+
+    const maxX = window.innerWidth - rect.width - padding;
+    const maxY = window.innerHeight - rect.height - padding;
+
+    let x, y, distance;
+    do {
+      x = Math.random() * maxX;
+      y = Math.random() * maxY;
+      distance = Math.hypot(
+        mouseX - (x + rect.width / 2),
+        mouseY - (y + rect.height / 2)
+      );
+    } while (distance < 220);
+
+    noBtn.classList.remove("show");
+
+    setTimeout(() => {
+      noBtn.style.position = "absolute";
+      noBtn.style.left = x + "px";
+      noBtn.style.top = y + "px";
+      noBtn.classList.add("show");
+    }, 150);
+  }
+
+  document.addEventListener("mousemove", (e) => {
+    const rect = noBtn.getBoundingClientRect();
+    const distance = Math.hypot(
+      e.clientX - (rect.left + rect.width / 2),
+      e.clientY - (rect.top + rect.height / 2)
+    );
+
+    if (distance < 150 && mainContent.classList.contains("show")) {
+      teleportButton(e.clientX, e.clientY);
+    }
+  });
+
+  // Initial position
+  window.onload = () => {
+    const rect = noBtn.getBoundingClientRect();
+    noBtn.style.position = "absolute";
+    noBtn.style.left = (window.innerWidth - rect.width) / 2 + "px";
+    noBtn.style.top = "360px";
+    noBtn.classList.add("show");
+  };
+</script>
+
+</body>
+</html>
